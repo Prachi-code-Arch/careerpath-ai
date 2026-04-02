@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CareerPath AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,sans-serif;background:#0f0f13;color:#e2e8f0;height:100vh;display:flex;flex-direction:column}
+.header{padding:12px 24px;background:#1a1a2e;border-bottom:1px solid #2d2d44;display:flex;justify-content:space-between;align-items:center}
+.logo{color:#818cf8;font-size:18px;font-weight:700}
+.badge{padding:4px 10px;border-radius:20px;font-size:12px;background:#052e16;color:#34d399;border:1px solid #065f46}
+.main{display:flex;flex:1;overflow:hidden}
+.left{width:180px;background:#13131f;border-right:1px solid #1e1e3f;padding:16px;text-align:center}
+.av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:700;margin:0 auto 8px;font-size:16px;color:white}
+.nm{font-weight:600;font-size:14px}
+.rl{font-size:11px;color:#818cf8;margin:2px 0 2px}
+.co{font-size:11px;color:#64748b;margin-bottom:12px}
+.stats{display:flex;gap:6px;margin:10px 0}
+.stat{flex:1;background:#1a1a2e;border-radius:6px;padding:6px}
+.sv{font-size:16px;font-weight:700;color:#818cf8}
+.sl{font-size:9px;color:#64748b}
+.chat{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex}
+.msg.u{justify-content:flex-end}
+.bub{max-width:75%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6}
+.msg.u .bub{background:#3730a3;color:#e0e7ff}
+.msg.b .bub{background:#1a1a2e;border:1px solid #2d2d44}
+.atags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.atag{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.inp{padding:12px;background:#13131f;border-top:1px solid #1e1e3f;display:flex;gap:8px}
+.inp textarea{flex:1;background:#1a1a2e;border:2px solid #6366f1;border-radius:10px;padding:10px;color:#fff;font-size:14px;resize:none;outline:none;font-family:inherit}
+.inp button{padding:0 20px;background:#6366f1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;min-width:70px}
+.inp button:disabled{background:#2d2d44;cursor:not-allowed}
+.right{width:200px;background:#13131f;border-left:1px solid #1e1e3f;padding:16px;overflow-y:auto}
+.ft{font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:12px}
+.ac{display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:#1a1a2e;margin-bottom:8px;border:1px solid #1e1e3f;transition:all 0.3s}
+.ac.on{border-color:#3730a3;background:#1e1b4b}
+.ai{font-size:16px;margin-top:1px}
+.an{font-size:11px;font-weight:600}
+.as{font-size:10px;color:#475569}
+.done{color:#34d399}
+.thinking{color:#f59e0b}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="logo">CareerPath AI</span>
+  <div><span class="badge" style="margin-right:8px">4 Agents Active</span><span class="badge">Live on Google Cloud</span></div>
+</div>
+<div class="main">
+  <div class="left">
+    <div class="av">PS</div>
+    <div class="nm">Priya Sharma</div>
+    <div class="rl">Software Engineer</div>
+    <div class="co">TCS - Delhi</div>
+    <div class="stats">
+      <div class="stat"><div class="sv" id="w">0</div><div class="sl">Wins</div></div>
+      <div class="stat"><div class="sv" id="g">0</div><div class="sl">Goals</div></div>
+    </div>
+    <div style="font-size:10px;color:#334155;margin-top:8px">Demo Persona</div>
+  </div>
+  <div class="chat">
+    <div class="msgs" id="msgs">
+      <div class="msg b"><div class="bub">Hi Priya! I am CareerPath AI - your personal career coach with 4 specialist agents. What is on your mind today?</div></div>
+    </div>
+    <div class="inp">
+      <textarea id="txt" rows="2" placeholder="Type your message here..."></textarea>
+      <button id="btn" onclick="go()">Send</button>
+    </div>
+  </div>
+  <div class="right">
+    <div class="ft">Agent Activity</div>
+    <div class="ac" id="card-orch"><span class="ai">⚡</span><div><div class="an" style="color:#8b5cf6">Orchestrator</div><div class="as" id="stat-orch">idle</div></div></div>
+    <div class="ac" id="card-coach"><span class="ai">🧠</span><div><div class="an" style="color:#6366f1">Coach</div><div class="as" id="stat-coach">idle</div></div></div>
+    <div class="ac" id="card-ach"><span class="ai">🏆</span><div><div class="an" style="color:#10b981">Achievement</div><div class="as" id="stat-ach">idle</div></div></div>
+    <div class="ac" id="card-skill"><span class="ai">📚</span><div><div class="an" style="color:#f59e0b">Skillbuild</div><div class="as" id="stat-skill">idle</div></div></div>
+    <div class="ac" id="card-sched"><span class="ai">📅</span><div><div class="an" style="color:#3b82f6">Schedule</div><div class="as" id="stat-sched">idle</div></div></div>
+    <div style="margin-top:16px;text-align:center;font-size:10px;color:#334155">Powered by Vertex AI + Gemini</div>
+  </div>
+</div>
+<script>
+var BACKEND = "https://careerpath-backend-66798922244.us-central1.run.app";
+var sessionId = null;
+var COLORS = {coach_agent:"#6366f1",achievement_agent:"#10b981",skillbuild_agent:"#f59e0b",schedule_agent:"#3b82f6"};
+var LABELS = {coach_agent:"Coach",achievement_agent:"Achievement",skillbuild_agent:"Skill Builder",schedule_agent:"Scheduler"};
+
+document.getElementById("txt").addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(); }
+});
+
+function addMsg(role, text, agents) {
+  var msgs = document.getElementById("msgs");
+  var div = document.createElement("div");
+  div.className = "msg " + role;
+  var tagsHtml = "";
+  if (agents && agents.length > 0) {
+    tagsHtml = '<div class="atags">';
+    for (var i = 0; i < agents.length; i++) {
+      var a = agents[i];
+      var c = COLORS[a] || "#818cf8";
+      var l = LABELS[a] || a;
+      tagsHtml += '<span class="atag" style="background:' + c + '22;color:' + c + ';border:1px solid ' + c + '44">' + l + '</span>';
+    }
+    tagsHtml += '</div>';
+  }
+  div.innerHTML = '<div class="bub"><p style="white-space:pre-wrap">' + text + '</p>' + tagsHtml + '</div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function setCard(id, state) {
+  var card = document.getElementById("card-" + id);
+  var stat = document.getElementById("stat-" + id);
+  if (!card || !stat) return;
+  if (state === "done")    { card.className = "ac on"; stat.className = "as done"; stat.textContent = "done"; }
+  else if (state === "on") { card.className = "ac on"; stat.className = "as thinking"; stat.textContent = "thinking..."; }
+  else                     { card.className = "ac"; stat.className = "as"; stat.textContent = "idle"; }
+}
+
+function resetAll() {
+  setCard("orch","idle"); setCard("coach","idle");
+  setCard("ach","idle"); setCard("skill","idle"); setCard("sched","idle");
+}
+
+async function go() {
+  var txt = document.getElementById("txt");
+  var btn = document.getElementById("btn");
+  var msg = txt.value.trim();
+  if (!msg) return;
+  txt.value = "";
+  btn.disabled = true;
+  addMsg("u", msg, []);
+  resetAll();
+  setCard("orch", "on");
+  try {
+    var res = await fetch(BACKEND + "/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({ user_id: "priya_001", message: msg }, sessionId ? { session_id: sessionId } : {}))
+    });
+    var data = await res.json();
+    sessionId = data.session_id || sessionId;
+    var responseText = (data && data.response) ? data.response : (data ? JSON.stringify(data) : "No response");
+    var agentsCalled = (data && data.agents_called) ? data.agents_called : [];
+    addMsg("b", responseText, agentsCalled);
+    resetAll();
+    setCard("orch", "done");
+    for (var i = 0; i < agentsCalled.length; i++) {
+      if (agentsCalled[i] === "coach_agent")       setCard("coach", "done");
+      if (agentsCalled[i] === "achievement_agent") setCard("ach", "done");
+      if (agentsCalled[i] === "skillbuild_agent")  setCard("skill", "done");
+      if (agentsCalled[i] === "schedule_agent")    setCard("sched", "done");
+    }
+    if (data && data.user_context) {
+      document.getElementById("w").textContent = data.user_context.wins_logged || 0;
+      document.getElementById("g").textContent = data.user_context.active_goals || 0;
+    }
+  } catch (err) {
+    addMsg("b", "Error: " + err.message, []);
+    resetAll();
+  }
+  btn.disabled = false;
+  txt.focus();
+}
+</script>
+</body>
+</html>
