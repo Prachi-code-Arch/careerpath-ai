@@ -26,9 +26,23 @@ class ChatRequest(BaseModel):
     message: str
     session_id: str = None
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+@app.get("/", response_class=HTMLResponse)
+def root():
+    return """
+    <html><body style="font-family:sans-serif;background:#0f0f13;color:#e2e8f0;padding:40px">
+    <h1 style="color:#818cf8">CareerPath AI</h1>
+    <p>Multi-Agent Career Coach — Google Cloud GenAI Hackathon APAC</p>
+    <h3 style="color:#34d399">Status: Live ✓</h3>
+    <p><b>Endpoints:</b></p>
+    <ul>
+      <li>POST /chat — multi-agent chat</li>
+      <li>POST /profile — create user profile</li>
+      <li>GET /profile/{id} — get wins and goals</li>
+      <li>GET /health — health check</li>
+    </ul>
+    <p><b>Frontend:</b> <a style="color:#818cf8" href="https://careerpath-ai-2026.web.app">https://careerpath-ai-2026.web.app</a></p>
+    </body></html>
+    """
 
 @app.post("/chat")
 def chat(req: ChatRequest):
@@ -45,3 +59,7 @@ def get_profile_data(user_id: str):
     wins = get_wins(user_id)
     goals = get_goals(user_id)
     return {"user_id": user_id, "wins": wins, "goals": goals}
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "careerpath-ai"}
