@@ -5,21 +5,16 @@ import json, uuid
 
 def run(user_message: str, user_profile: dict) -> dict:
     user_id = user_profile.get("user_id", "unknown")
-
     past_wins = get_wins(user_id)
     wins_context = f"Past wins logged: {len(past_wins)}" if past_wins else "No wins logged yet."
-
     prompt = f"""
 You are a career achievement tracker helping a {user_profile.get('role', 'professional')}
 at {user_profile.get('company', 'a company')} in {user_profile.get('city', 'India')}.
-
 User said: "{user_message}"
 {wins_context}
-
 Extract any wins or achievements and convert them into strong performance
 review bullet points with impact metrics.
 If no wins mentioned, ask one specific question to uncover a recent achievement.
-
 Respond ONLY in JSON:
 {{
   "wins_found": [
@@ -29,7 +24,6 @@ Respond ONLY in JSON:
 }}
 """
     result = call_gemini(prompt, model=GEMINI_FLASH)
-
     try:
         clean = result.strip().replace("```json", "").replace("```", "")
         parsed = json.loads(clean)
@@ -43,7 +37,6 @@ Respond ONLY in JSON:
                     "category": win.get("category", "delivery"),
                     "used_in_review": False
                 })
-    except:
-        pass
-
+    except Exception as e:
+        print(f"Save error: {e}")
     return {"agent": "achievement_agent", "output": result}

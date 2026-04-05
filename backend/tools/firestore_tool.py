@@ -1,7 +1,7 @@
 from google.cloud import firestore
 from datetime import datetime
 
-db = firestore.Client()
+db = firestore.Client(database="careerpath01db")
 
 def save_user_profile(user_id: str, profile: dict):
     db.collection("users").document(user_id).set(profile, merge=True)
