@@ -1,7 +1,6 @@
 import vertexai
 from vertexai.generative_models import GenerativeModel
 from config import PROJECT_ID, LOCATION
-
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 def call_gemini(prompt: str, model: str = "gemini-2.5-flash", temperature: float = 0.4) -> str:
